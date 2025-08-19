@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using CMS.Infrastructure.Repositories;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,15 @@ MapsterConfig.RegisterMappings();
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+	c.SwaggerDoc("v1", new OpenApiInfo
+	{
+		Title = "CMS API",
+		Version = "v1",
+		Description = "Content Management System Web API"
+	});
+});
 
 // ✅ DbContext Kaydı
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -31,6 +40,7 @@ builder.Services.AddScoped<IContentService, ContentService>();
 // ✅ Repository Kayıtları
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IContentRepository, ContentRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 // ✅ MemoryCache veya Redis
 builder.Services.AddMemoryCache(); // İstersen RedisCache'e geçebilirsin

@@ -9,8 +9,10 @@ namespace CMS.Domain.Interfaces
 {
 	public interface IContentRepository
 	{
-		Task<Content> GetByIdAsync(Guid id);
+		Task<Content?> GetByIdAsync(Guid id);
 		Task<IEnumerable<Content>> GetByUserIdAsync(Guid userId);
-
+		Task<IEnumerable<Content>> GetAllAsync();
+		Task<IEnumerable<Content>> FilterAsync(string? language, string? categoryName);
+		Task AddAsync(Content content);
 	}
 }

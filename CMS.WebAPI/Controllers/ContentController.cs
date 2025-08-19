@@ -39,17 +39,39 @@ namespace CMS.WebAPI.Controllers
 		[HttpPost]
 		public async Task<IActionResult> CreateContent([FromBody] ContentCreateDto dto)
 		{
-			await _contentService.AddContentAsync(dto);
-			return Ok("Content created successfully");
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			try
+			{
+				await _contentService.AddContentAsync(dto);
+				return Ok("Content created successfully");
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpPost("category")]
 		public async Task<IActionResult> CreateCategory([FromBody] CategoryDto dto)
 		{
-			await _contentService.AddCategoryAsync(dto);
-			return Ok("Category created successfully");
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			try
+			{
+				await _contentService.AddCategoryAsync(dto);
+				return Ok("Category created successfully");
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
-
-
 	}
 }

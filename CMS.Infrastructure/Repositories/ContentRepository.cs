@@ -2,6 +2,7 @@
 using CMS.Domain.Interfaces;
 using CMS.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace CMS.Infrastructure.Repositories
 {
@@ -14,7 +15,7 @@ namespace CMS.Infrastructure.Repositories
 			_context = context;
 		}
 
-		public async Task<Content> GetByIdAsync(Guid id)
+		public async Task<Content?> GetByIdAsync(Guid id)
 		{
 			return await _context.Contents
 				.Include(c => c.Variants)
@@ -30,6 +31,42 @@ namespace CMS.Infrastructure.Repositories
 				.Include(c => c.Variants)
 				.Include(c => c.Category)
 				.ToListAsync();
+		}
+
+		public async Task<IEnumerable<Content>> GetAllAsync()
+		{
+			return await _context.Contents
+				.Include(c => c.Variants)
+				.Include(c => c.Category)
+				.Include(c => c.User)
+				.ToListAsync();
+		}
+
+		public async Task<IEnumerable<Content>> FilterAsync(string? language, string? categoryName)
+		{
+			var query = _context.Contents
+				.Include(c => c.Variants)
+				.Include(c => c.Category)
+				.Include(c => c.User)
+				.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(language))
+			{
+				query = query.Where(c => c.Language == language);
+			}
+
+			if (!string.IsNullOrWhiteSpace(categoryName))
+			{
+				query = query.Where(c => c.Category.Name == categoryName);
+			}
+
+			return await query.ToListAsync();
+		}
+
+		public async Task AddAsync(Content content)
+		{
+			await _context.Contents.AddAsync(content);
+			await _context.SaveChangesAsync();
 		}
 	}
 }

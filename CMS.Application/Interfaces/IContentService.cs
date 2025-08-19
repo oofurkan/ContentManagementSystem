@@ -11,8 +11,8 @@ namespace CMS.Application.Interfaces
 {
 	public interface IContentService
 	{
-		Task<ContentDto> GetContentForUserAsync(Guid userId, Guid contentId);
-		Task<IEnumerable<ContentDto>> FilterContentsAsync(string language, string category);
+		Task<ContentDto?> GetContentForUserAsync(Guid userId, Guid contentId);
+		Task<IEnumerable<ContentDto>> FilterContentsAsync(string? language, string? category);
 		Task AddContentAsync(ContentCreateDto dto);
 		Task AddCategoryAsync(CategoryDto dto);
 

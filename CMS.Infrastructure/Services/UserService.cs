@@ -17,6 +17,13 @@ namespace CMS.Infrastructure.Services
 
 		public async Task<UserDto> CreateUserAsync(UserDto dto)
 		{
+			// Check if user with same email already exists
+			var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
+			if (existingUser != null)
+			{
+				throw new InvalidOperationException($"User with email '{dto.Email}' already exists.");
+			}
+
 			var user = dto.Adapt<User>(); // Mapster dönüşümü
 			user.Id = Guid.NewGuid();
 
@@ -32,15 +39,8 @@ namespace CMS.Infrastructure.Services
 			if (user == null || user.Contents == null)
 				return Enumerable.Empty<ContentDto>();
 
-			// Her içerik için category bilgisi DTO’ya yazılıyor
-			var result = user.Contents.Select(c =>
-			{
-				var dto = c.Adapt<ContentDto>();
-				dto.CategoryName = c.Category?.Name;
-				return dto;
-			});
-
-			return result;
+			// Mapster now handles CategoryName mapping automatically
+			return user.Contents.Select(c => c.Adapt<ContentDto>());
 		}
 	}
 }

@@ -19,8 +19,20 @@ namespace CMS.WebAPI.Controllers
 		[HttpPost]
 		public async Task<IActionResult> CreateUser([FromBody] UserDto dto)
 		{
-			var createdUser = await _userService.CreateUserAsync(dto);
-			return Ok(createdUser);
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
+			try
+			{
+				var createdUser = await _userService.CreateUserAsync(dto);
+				return Ok(createdUser);
+			}
+			catch (InvalidOperationException ex)
+			{
+				return BadRequest(ex.Message);
+			}
 		}
 
 		[HttpGet("{userId}/contents")]

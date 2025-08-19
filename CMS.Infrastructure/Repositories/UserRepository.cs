@@ -20,7 +20,7 @@ namespace CMS.Infrastructure.Repositories
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task<User> GetByIdAsync(Guid id)
+		public async Task<User?> GetByIdAsync(Guid id)
 		{
 			return await _context.Users
 				.Include(u => u.Contents)
@@ -28,6 +28,12 @@ namespace CMS.Infrastructure.Repositories
 				.Include(u => u.Contents)
 					.ThenInclude(c => c.Category)
 				.FirstOrDefaultAsync(u => u.Id == id);
+		}
+
+		public async Task<User?> GetByEmailAsync(string email)
+		{
+			return await _context.Users
+				.FirstOrDefaultAsync(u => u.Email == email);
 		}
 	}
 }
