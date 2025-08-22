@@ -15,6 +15,7 @@ namespace CMS.Application.Interfaces
 		Task<IEnumerable<ContentDto>> FilterContentsAsync(string? language, string? category);
 		Task AddContentAsync(ContentCreateDto dto);
 		Task AddCategoryAsync(CategoryDto dto);
+		Task<List<CategoryDto>> GetCategoriesAsync();
 
 	}
 }

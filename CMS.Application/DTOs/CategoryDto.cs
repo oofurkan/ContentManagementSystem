@@ -9,6 +9,8 @@ namespace CMS.Application.DTOs
 {
 	public class CategoryDto
 	{
+		public Guid Id { get; set; } // Kategoriyi seçmek için gerekli
+
 		[Required]
 		[StringLength(100)]
 		public string Name { get; set; } = string.Empty;

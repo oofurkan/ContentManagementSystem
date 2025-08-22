@@ -1,6 +1,7 @@
 ﻿using CMS.Application.DTOs;
 using CMS.Application.Interfaces;
 using CMS.Infrastructure.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 
@@ -28,16 +29,18 @@ namespace CMS.WebAPI.Controllers
 			return Ok(content);
 		}
 
-		// Filtreleme (kategori ve dil ile)
-		[HttpGet("filter")]
-		public async Task<IActionResult> FilterContents([FromQuery] string? language, [FromQuery] string? category)
-		{
-			var filtered = await _contentService.FilterContentsAsync(language, category);
-			return Ok(filtered);
-		}
+			// Filtreleme (kategori ve dil ile)
+	[HttpGet("filter")]
+	[Authorize]
+	public async Task<IActionResult> FilterContents([FromQuery] string? language, [FromQuery] string? category)
+	{
+		var filtered = await _contentService.FilterContentsAsync(language, category);
+		return Ok(filtered);
+	}
 
-		[HttpPost]
-		public async Task<IActionResult> CreateContent([FromBody] ContentCreateDto dto)
+	[HttpPost]
+	[Authorize]
+	public async Task<IActionResult> CreateContent([FromBody] ContentCreateDto dto)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -55,8 +58,9 @@ namespace CMS.WebAPI.Controllers
 			}
 		}
 
-		[HttpPost("category")]
-		public async Task<IActionResult> CreateCategory([FromBody] CategoryDto dto)
+	[HttpPost("category")]
+	[Authorize]
+	public async Task<IActionResult> CreateCategory([FromBody] CategoryDto dto)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -73,5 +77,16 @@ namespace CMS.WebAPI.Controllers
 				return BadRequest(ex.Message);
 			}
 		}
+
+	// Kategori listesini getir
+	[HttpGet("categories")]
+	public async Task<IActionResult> GetCategories()
+	{
+		var categories = await _contentService.GetCategoriesAsync();
+		return Ok(categories);
+	}
+
 	}
 }
+
+	

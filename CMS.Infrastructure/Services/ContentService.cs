@@ -2,7 +2,9 @@
 using CMS.Application.Interfaces;
 using CMS.Domain.Entities;
 using CMS.Domain.Interfaces;
+using CMS.Infrastructure.Repositories;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace CMS.Infrastructure.Services
@@ -90,6 +92,16 @@ namespace CMS.Infrastructure.Services
 			};
 
 			await _categoryRepository.AddAsync(category);
+		}
+
+		public async Task<List<CategoryDto>> GetCategoriesAsync()
+		{
+			var categories = await _categoryRepository.GetAllAsync();
+			return categories.Select(c => new CategoryDto
+			{
+				Id = c.Id,
+				Name = c.Name
+			}).ToList();
 		}
 	}
 }

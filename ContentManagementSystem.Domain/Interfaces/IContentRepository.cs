@@ -14,5 +14,6 @@ namespace CMS.Domain.Interfaces
 		Task<IEnumerable<Content>> GetAllAsync();
 		Task<IEnumerable<Content>> FilterAsync(string? language, string? categoryName);
 		Task AddAsync(Content content);
+
 	}
 }

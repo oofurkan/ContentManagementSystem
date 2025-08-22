@@ -1,5 +1,6 @@
 ﻿using CMS.Application.DTOs;
 using CMS.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.InteropServices;
 
@@ -16,30 +17,32 @@ namespace CMS.WebAPI.Controllers
 			_userService = userService;
 		}
 
-		[HttpPost]
-		public async Task<IActionResult> CreateUser([FromBody] UserDto dto)
+	[HttpPost]
+	public async Task<IActionResult> CreateUser([FromBody] UserCreateDto dto)
 		{
 			if (!ModelState.IsValid)
 			{
 				return BadRequest(ModelState);
 			}
 
-			try
-			{
-				var createdUser = await _userService.CreateUserAsync(dto);
-				return Ok(createdUser);
-			}
+					try
+		{
+			var createdUser = await _userService.CreateUserWithAuthAsync(dto);
+			return Ok(createdUser);
+		}
 			catch (InvalidOperationException ex)
 			{
 				return BadRequest(ex.Message);
 			}
 		}
 
-		[HttpGet("{userId}/contents")]
-		public async Task<IActionResult> GetUserContents(Guid userId)
+	[HttpGet("{userId}/contents")]
+	[Authorize]
+	public async Task<IActionResult> GetUserContents(Guid userId)
 		{
 			var contents = await _userService.GetUserContentsAsync(userId);
 			return Ok(contents);
 		}
 	}
+
 }
