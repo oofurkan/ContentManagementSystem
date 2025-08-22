@@ -88,3 +88,6 @@ Repository Pattern uygulanmıştır.
 
 Caching mekanizması IMemoryCache ile sağlanmıştır.
 
+Frontent tarafı	react ile geliştirildi.
+react-cms-frontend klasörü altında yer alıyor.
+
