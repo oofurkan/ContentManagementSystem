@@ -42,10 +42,21 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IContentRepository, ContentRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-// ✅ MemoryCache veya Redis
-builder.Services.AddMemoryCache(); // İstersen RedisCache'e geçebilirsin
+// ✅ MemoryCache 
+builder.Services.AddMemoryCache();
+
+// ✅ CORS Ayarları
+builder.Services.AddCors(options =>
+{
+	options.AddPolicy("AllowReactApp",
+		policy => policy.WithOrigins("http://localhost:3000") // React çalıştığı port
+						.AllowAnyMethod()
+						.AllowAnyHeader());
+});
 
 var app = builder.Build();
+
+app.UseCors("AllowReactApp");
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
